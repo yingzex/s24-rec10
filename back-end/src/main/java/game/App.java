@@ -6,6 +6,8 @@ import fi.iki.elonen.NanoHTTPD;
 
 public class App extends NanoHTTPD {
 
+    // creates an instance of App, which starts the HTTP server on port 8080. This
+    // server listens for incoming HTTP requests from the frontend.
     public static void main(String[] args) {
         try {
             new App();
@@ -18,6 +20,7 @@ public class App extends NanoHTTPD {
 
     /**
      * Start the server at :8080 port.
+     * 
      * @throws IOException
      */
     public App() throws IOException {
@@ -38,6 +41,9 @@ public class App extends NanoHTTPD {
         } else if (uri.equals("/play")) {
             // e.g., /play?x=1&y=1
             this.game = this.game.play(Integer.parseInt(params.get("x")), Integer.parseInt(params.get("y")));
+        } else if ("/undo".equals(uri)) {
+            System.err.println("/undo request");
+            this.game = this.game.undo();
         }
         // Extract the view-specific data from the game and apply it to the template.
         GameState gameplay = GameState.forGame(this.game);

@@ -5,18 +5,25 @@ import java.util.Arrays;
 public class GameState {
 
     private final Cell[] cells;
+    private final String winner;
 
-    private GameState(Cell[] cells) {
+    private GameState(Cell[] cells, String winner) {
+        this.winner = winner;
         this.cells = cells;
     }
 
     public static GameState forGame(Game game) {
         Cell[] cells = getCells(game);
-        return new GameState(cells);
+        String winner = getWinner(game);
+        return new GameState(cells, winner);
     }
 
     public Cell[] getCells() {
         return this.cells;
+    }
+
+    public String getWinner() {
+        return this.winner;
     }
 
     /**
@@ -25,9 +32,12 @@ public class GameState {
      */
     @Override
     public String toString() {
-        return """
-                { "cells": %s}
-                """.formatted(Arrays.toString(this.cells));
+        // return """
+        // { "cells": %s, "winner": %s}
+        // """.formatted(Arrays.toString(this.cells), this.winner);
+        String winner = "\"" + this.winner + "\"";
+        String result = String.format("{\"cells\": %s, \n\"winner\": %s}", Arrays.toString(this.cells), winner);
+        return result;
     }
 
     private static Cell[] getCells(Game game) {
@@ -49,6 +59,11 @@ public class GameState {
             }
         }
         return cells;
+    }
+
+    public static String getWinner(Game game) {
+        Player player = game.getWinner();
+        return player == Player.PLAYER0 ? "X" : (player == Player.PLAYER0 ? "O" : "no winner yet");
     }
 }
 
@@ -88,7 +103,7 @@ class Cell {
                     "text": "%s",
                     "playable": %b,
                     "x": %d,
-                    "y": %d 
+                    "y": %d
                 }
                 """.formatted(this.text, this.playable, this.x, this.y);
     }
